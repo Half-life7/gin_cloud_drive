@@ -1,6 +1,14 @@
-# 个人网盘系统
+# gin_cloud_drive
 
 一个基于Go语言和Gin框架开发的个人网盘系统，提供文件上传、下载、管理、系统监控等功能。
+
+[![GitHub stars](https://img.shields.io/github/stars/Half-life7/gin_cloud_drive?style=social)](https://github.com/Half-life7/gin_cloud_drive/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Half-life7/gin_cloud_drive?style=social)](https://github.com/Half-life7/gin_cloud_drive/network/members)
+[![GitHub license](https://img.shields.io/github/license/Half-life7/gin_cloud_drive)](https://github.com/Half-life7/gin_cloud_drive/blob/main/LICENSE)
+
+## 项目地址
+
+GitHub: [https://github.com/Half-life7/gin_cloud_drive](https://github.com/Half-life7/gin_cloud_drive)
 
 ## 功能特性
 
@@ -55,8 +63,8 @@
 
 1. **克隆项目**
    ```bash
-   git clone <项目地址>
-   cd demo_1201
+   git clone https://github.com/Half-life7/gin_cloud_drive.git
+   cd gin_cloud_drive
    ```
 
 2. **安装依赖**
@@ -71,6 +79,15 @@
 
 4. **访问系统**
    打开浏览器，访问 `http://localhost:8080`
+
+5. **构建项目**
+   ```bash
+   go build -o gin_cloud_drive.exe
+   ```
+   或在Linux/macOS上：
+   ```bash
+   go build -o gin_cloud_drive
+   ```
 
 ## 使用说明
 
@@ -102,7 +119,7 @@
 ## 项目结构
 
 ```
-demo_1201/
+gin_cloud_drive/
 ├── backend/
 │   ├── controllers/      # 控制器
 │   ├── middleware/       # 中间件
@@ -120,7 +137,8 @@ demo_1201/
 ├── upload/               # 文件上传目录
 ├── main.go               # 主程序
 ├── go.mod                # Go模块依赖
-└── go.sum                # Go模块校验和
+├── go.sum                # Go模块校验和
+└── README.md             # 项目文档
 ```
 
 ## 配置说明
@@ -148,7 +166,9 @@ demo_1201/
 
 ## 许可证
 
-MIT License
+本项目采用 MIT 许可证，详情请查看 [LICENSE](https://github.com/Half-life7/gin_cloud_drive/blob/main/LICENSE) 文件。
+
+MIT License 是一种宽松的开源许可证，允许您自由使用、修改和分发本项目的代码，无论是商业用途还是非商业用途，只要保留原始许可证和版权声明即可。
 
 ## 更新日志
 
@@ -162,14 +182,48 @@ MIT License
 - ✅ 实现拖拽上传
 - ✅ 实现手动上传（文件缓冲区域）
 
-## 贡献
+## 快速开始
 
-欢迎提交Issue和Pull Request！
+```bash
+# 克隆项目
+git clone https://github.com/Half-life7/gin_cloud_drive.git
+cd gin_cloud_drive
+
+# 安装依赖
+go mod tidy
+
+# 运行项目
+go run main.go
+
+# 访问系统
+# 打开浏览器，访问 http://localhost:8080
+```
+
+## 贡献指南
+
+1. **Fork 项目**
+2. **创建特性分支** (`git checkout -b feature/AmazingFeature`)
+3. **提交更改** (`git commit -m 'Add some AmazingFeature'`)
+4. **推送到分支** (`git push origin feature/AmazingFeature`)
+5. **创建 Pull Request**
+
+### 贡献者行为准则
+
+- 尊重他人，友好沟通
+- 提交的代码需要有清晰的注释
+- 确保代码通过编译和基本测试
+- 提交的PR需要有清晰的描述
 
 ## 联系方式
 
-- E-mail: tlingchenldb@gmail.com
-- 联系电话: 19267700810
+- **GitHub**: [Half-life7](https://github.com/Half-life7)
+- **E-mail**: tlingchenldb@gmail.com
+
+## 致谢
+
+- 感谢 [Gin](https://gin-gonic.com/) 框架团队
+- 感谢 [gopsutil](https://github.com/shirou/gopsutil) 库的开发者
+- 感谢 [Chart.js](https://www.chartjs.org/) 团队
 
 ---
 
