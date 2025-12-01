@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>个人网盘 - 网盘</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<script src="/static/js/auth.js?v=1.0"></script>
+</head>
+<body>
+	<!-- 导航栏 -->
+	<nav class="navbar">
+		<div class="container">
+			<h1>个人网盘</h1>
+			<ul class="navbar-nav">
+				<li><a href="/">首页</a></li>
+				<li><a href="/static/disk.html">网盘</a></li>
+				<li class="dropdown">
+					<a href="#">关于</a>
+					<div class="dropdown-content">
+						<a href="/static/about.html">关于网站</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="/static/logs.html">日志管理</a>
+					</div>
+				</li>
+			</ul>
+			<!-- 暗色模式切换按钮 -->
+			<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换暗色模式">
+				<span class="theme-icon sun">☀️</span>
+				<span class="theme-icon moon" style="display: none;">🌙</span>
+			</button>
+			
+			<div class="user-profile dropdown" id="userProfile">
+				<!-- 未登录状态 -->
+				<div class="avatar" id="avatar">
+					<span id="userInitial">游</span>
+				</div>
+				<div class="dropdown-content">
+					<div id="loginSection">
+						<a href="#" onclick="showLoginForm()">登录</a>
+					</div>
+					<div id="userSection" style="display: none;">
+						<a href="#" onclick="showUserCenter()">个人中心</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="#" onclick="logout()">登出</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- 登录表单模态框 -->
+	<div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+		<div class="login-form" style="position: relative;">
+			<span style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 1.5rem;" onclick="closeLoginModal()">&times;</span>
+			<h2>管理员登录</h2>
+			<input type="text" id="username" placeholder="用户名">
+			<input type="password" id="password" placeholder="密码">
+			<button class="btn btn-primary" onclick="login()">登录</button>
+			<div id="loginStatus"></div>
+		</div>
+	</div>
+
+	<!-- 文件夹选择器模态框 -->
+	<div id="folderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+		<div style="background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 80%; max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
+			<div style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+				<h3 id="folderModalTitle">选择上传路径</h3>
+				<span style="cursor: pointer; font-size: 1.5rem;" onclick="closeFolderModal()">&times;</span>
+			</div>
+			<div style="padding: 1rem; overflow-y: auto; flex: 1;">
+				<div id="folderBreadcrumb" style="margin-bottom: 1rem; font-weight: 500;">
+					<span class="breadcrumb-item" onclick="navigateToFolder('')" style="cursor: pointer; color: #007bff;">/</span>
+				</div>
+				<div id="folderList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+					<!-- 文件夹列表将通过JavaScript动态加载 -->
+				</div>
+			</div>
+			<div style="padding: 1rem; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 0.5rem;">
+				<button class="btn btn-secondary" onclick="closeFolderModal()">取消</button>
+				<button class="btn btn-primary" onclick="selectCurrentFolder()">确定</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 主要内容 -->
+	<div class="container">
+		<!-- 上传表单 -->
+		<div class="card">
+			<h2>文件管理</h2>
+			<div class="upload-form">
+				<h3>上传文件</h3>
+				<!-- 拖拽上传区域 -->
+				<div id="dropZone" class="drop-zone">
+					<div class="drop-zone-content">
+						<span class="drop-zone-icon">📁</span>
+						<p>拖拽文件到此处，或</p>
+						<label for="file" class="btn btn-primary">选择文件</label>
+					</div>
+				</div>
+				
+				<!-- 文件缓冲区域 -->
+				<div id="fileBuffer" class="file-buffer" style="display: none;">
+					<h4>待上传文件</h4>
+					<div id="pendingFilesList" class="file-buffer-list">
+						<!-- 待上传文件列表将通过JavaScript动态加载 -->
+					</div>
+				</div>
+				
+				<form id="uploadForm">
+					<div class="form-group" style="display: none;">
+						<input type="file" id="file" name="file" multiple>
+					</div>
+					<div class="form-group">
+						<label for="path">上传路径</label>
+						<div style="display: flex; gap: 0.5rem;">
+							<input type="text" id="path" name="path" placeholder="例如：images/2025" value="" readonly>
+							<button type="button" class="btn btn-secondary" onclick="showFolderSelector()">选择文件夹</button>
+						</div>
+						<small style="color: #666; display: block; margin-top: 0.25rem;">当前路径：<span id="currentPath">/</span></small>
+					</div>
+					<button type="submit" id="startUploadBtn" class="btn btn-primary" disabled>开始上传</button>
+				</form>
+				<div id="uploadStatus"></div>
+			</div>
+
+			<div class="upload-form">
+				<h3>新建文件夹</h3>
+				<div style="display: flex; gap: 0.5rem;">
+					<input type="text" id="newFolderName" placeholder="文件夹名称" style="flex: 1;">
+					<button class="btn btn-primary" onclick="createNewFolder()">新建</button>
+				</div>
+				<div id="createFolderStatus"></div>
+			</div>
+		</div>
+
+		<!-- 文件列表 -->
+		<div class="file-list">
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+				<h3>文件列表</h3>
+				<div class="sort-options">
+					<span>排序方式：</span>
+					<button class="btn btn-sm" id="sortName" onclick="sortFiles('name')">名称 <span id="sortNameIcon">↑</span></button>
+					<button class="btn btn-sm" id="sortSize" onclick="sortFiles('size')">大小 <span id="sortSizeIcon">↑</span></button>
+					<button class="btn btn-sm" id="sortTime" onclick="sortFiles('time')">时间 <span id="sortTimeIcon">↑</span></button>
+					<button class="btn btn-sm" id="sortType" onclick="sortFiles('type')">类型 <span id="sortTypeIcon">↑</span></button>
+				</div>
+			</div>
+			<div id="fileList">
+				<!-- 文件列表将通过JavaScript动态加载 -->
+			</div>
+		</div>
+
+		<!-- 登录表单 -->
+	
+	</div>
+
+	<!-- JavaScript -->
+	<script src="/static/js/disk.js"></script>
+	
+	<!-- 版权信息 -->
+	<footer class="footer">
+		<div class="container">
+			<p>归2023级唐家鸿所有未经许可不得复制、更改</p>
+			<p>	E-mail：tlingchenldb@gmail.com</p>
+			<p>	联系电话：19267700810</p>
+		</div>
+	</footer>
+</body>
+</html>

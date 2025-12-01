@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>个人网盘 - 日志管理</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<script src="/static/js/auth.js?v=1.0"></script>
+</head>
+<body>
+	<!-- 导航栏 -->
+	<nav class="navbar">
+		<div class="container">
+			<h1>个人网盘</h1>
+			<ul class="navbar-nav">
+				<li><a href="/">首页</a></li>
+				<li><a href="/static/disk.html">网盘</a></li>
+				<li class="dropdown">
+					<a href="#">关于</a>
+					<div class="dropdown-content">
+						<a href="/static/about.html">关于网站</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="/static/logs.html">日志管理</a>
+					</div>
+				</li>
+			</ul>
+			<!-- 暗色模式切换按钮 -->
+			<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换暗色模式">
+				<span class="theme-icon sun">☀️</span>
+				<span class="theme-icon moon" style="display: none;">🌙</span>
+			</button>
+			
+			<div class="user-profile dropdown" id="userProfile">
+				<!-- 未登录状态 -->
+				<div class="avatar" id="avatar">
+					<span id="userInitial">游</span>
+				</div>
+				<div class="dropdown-content">
+					<div id="loginSection">
+						<a href="#" onclick="showLoginForm()">登录</a>
+					</div>
+					<div id="userSection" style="display: none;">
+						<a href="#" onclick="showUserCenter()">个人中心</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="#" onclick="logout()">登出</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- 登录表单模态框 -->
+	<div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+		<div class="login-form" style="position: relative;">
+			<span style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 1.5rem;" onclick="closeLoginModal()">&times;</span>
+			<h2>管理员登录</h2>
+			<input type="text" id="username" placeholder="用户名">
+			<input type="password" id="password" placeholder="密码">
+			<button class="btn btn-primary" onclick="login()">登录</button>
+			<div id="loginStatus"></div>
+		</div>
+	</div>
+
+	<!-- 主要内容 -->
+	<div class="container">
+		<h2>日志管理</h2>
+
+		<!-- 日志统计概览 -->
+		<div class="status-grid" id="logStats">
+			<div class="status-card">
+				<h3>总日志数</h3>
+				<div class="status-value" id="totalLogs">--</div>
+			</div>
+			<div class="status-card">
+				<h3>文件操作</h3>
+				<div class="status-value" id="fileLogs">--</div>
+			</div>
+			<div class="status-card">
+				<h3>用户操作</h3>
+				<div class="status-value" id="userLogs">--</div>
+			</div>
+			<div class="status-card">
+				<h3>访问记录</h3>
+				<div class="status-value" id="accessLogs">--</div>
+			</div>
+		</div>
+
+		<!-- 日志查询表单 -->
+		<div class="card" style="margin: 20px 0;">
+			<h3>日志查询</h3>
+			<form id="logQueryForm" class="log-query-form">
+				<div class="form-row">
+					<div class="form-group">
+						<label for="startDate">开始时间</label>
+						<input type="datetime-local" id="startDate" name="start_date">
+					</div>
+					<div class="form-group">
+						<label for="endDate">结束时间</label>
+						<input type="datetime-local" id="endDate" name="end_date">
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group">
+						<label for="logLevel">日志级别</label>
+						<select id="logLevel" name="level">
+							<option value="">全部</option>
+							<option value="DEBUG">DEBUG</option>
+							<option value="INFO">INFO</option>
+							<option value="WARN">WARN</option>
+							<option value="ERROR">ERROR</option>
+							<option value="FATAL">FATAL</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="logType">日志类型</label>
+						<select id="logType" name="type">
+							<option value="">全部</option>
+							<option value="FILE">文件操作</option>
+							<option value="USER">用户操作</option>
+							<option value="SYSTEM">系统操作</option>
+							<option value="ACCESS">访问记录</option>
+							<option value="ERROR">错误记录</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group">
+						<label for="ip">IP地址</label>
+						<input type="text" id="ip" name="ip" placeholder="请输入IP地址">
+					</div>
+					<div class="form-group">
+						<label for="action">操作内容</label>
+						<input type="text" id="action" name="action" placeholder="请输入操作内容">
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group">
+						<label for="file">文件名</label>
+						<input type="text" id="file" name="file" placeholder="请输入文件名">
+					</div>
+					<div class="form-group">
+						<label for="pageSize">每页条数</label>
+						<select id="pageSize" name="page_size">
+							<option value="20">20</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary">查询</button>
+					<button type="button" class="btn btn-secondary" onclick="resetQueryForm()">重置</button>
+					<button type="button" class="btn btn-danger" onclick="clearOldLogs()">清理旧日志</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- 日志列表 -->
+		<div class="card">
+			<h3>日志列表</h3>
+			<div class="table-container">
+				<table class="log-table" id="logTable">
+					<thead>
+						<tr>
+							<th>时间</th>
+							<th>级别</th>
+							<th>类型</th>
+							<th>IP地址</th>
+							<th>操作内容</th>
+							<th>文件</th>
+							<th>大小</th>
+							<th>详细信息</th>
+						</tr>
+					</thead>
+					<tbody id="logTableBody">
+						<!-- 日志数据将通过JavaScript动态加载 -->
+						<tr>
+							<td colspan="8" style="text-align: center; padding: 20px;">加载中...</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- 分页控件 -->
+			<div class="pagination" id="pagination">
+				<!-- 分页按钮将通过JavaScript动态生成 -->
+			</div>
+		</div>
+	</div>
+
+	<!-- JavaScript -->
+	<script src="/static/js/logs.js"></script>
+	
+	<!-- 版权信息 -->
+	<footer class="footer">
+		<div class="container">
+			<p>归2023级唐家鸿所有未经许可不得复制、更改</p>
+			<p>	E-mail：tlingchenldb@gmail.com</p>
+			<p>	联系电话：19267700810</p>
+		</div>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>个人网盘 - 系统状态</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<script src="/static/js/auth.js?v=1.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+	<!-- 导航栏 -->
+	<nav class="navbar">
+		<div class="container">
+			<h1>个人网盘</h1>
+			<ul class="navbar-nav">
+				<li><a href="/">首页</a></li>
+				<li><a href="/static/disk.html">网盘</a></li>
+				<li class="dropdown">
+					<a href="#">关于</a>
+					<div class="dropdown-content">
+						<a href="/static/about.html">关于网站</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="/static/logs.html">日志管理</a>
+					</div>
+				</li>
+			</ul>
+			<!-- 暗色模式切换按钮 -->
+			<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换暗色模式">
+				<span class="theme-icon sun">☀️</span>
+				<span class="theme-icon moon" style="display: none;">🌙</span>
+			</button>
+			
+			<div class="user-profile dropdown" id="userProfile">
+				<!-- 未登录状态 -->
+				<div class="avatar" id="avatar">
+					<span id="userInitial">游</span>
+				</div>
+				<div class="dropdown-content">
+					<div id="loginSection">
+						<a href="#" onclick="showLoginForm()">登录</a>
+					</div>
+					<div id="userSection" style="display: none;">
+						<a href="#" onclick="showUserCenter()">个人中心</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="#" onclick="logout()">登出</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- 登录表单模态框 -->
+	<div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+		<div class="login-form" style="position: relative;">
+			<span style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 1.5rem;" onclick="closeLoginModal()">&times;</span>
+			<h2>管理员登录</h2>
+			<input type="text" id="username" placeholder="用户名">
+			<input type="password" id="password" placeholder="密码">
+			<button class="btn btn-primary" onclick="login()">登录</button>
+			<div id="loginStatus"></div>
+		</div>
+	</div>
+
+	<!-- 主要内容 -->
+	<div class="container">
+		<h2>系统状态监控</h2>
+
+		<!-- 系统信息概览 -->
+		<div class="status-grid">
+			<div class="status-card">
+				<h3>CPU使用率</h3>
+				<div class="status-value" id="cpuUsage">--</div>
+				<div class="status-label">核心数：<span id="cpuCores">--</span></div>
+			</div>
+			<div class="status-card">
+				<h3>内存使用率</h3>
+				<div class="status-value" id="memoryUsage">--</div>
+				<div class="status-label">可用：<span id="memoryAvailable">--</span></div>
+			</div>
+			<div class="status-card">
+				<h3>磁盘使用率</h3>
+				<div class="status-value" id="diskUsage">--</div>
+				<div class="status-label">可用：<span id="diskAvailable">--</span></div>
+			</div>
+		</div>
+
+		<!-- 历史趋势图表 -->
+		<div class="chart-container">
+			<h3>历史趋势</h3>
+			<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+				<button class="btn btn-secondary" onclick="loadHistoryData(1)">1小时</button>
+				<button class="btn btn-secondary" onclick="loadHistoryData(6)">6小时</button>
+				<button class="btn btn-secondary" onclick="loadHistoryData(24)">24小时</button>
+				<button class="btn btn-secondary" onclick="loadHistoryData(168)">7天</button>
+			</div>
+			<div style="height: 400px; width: 100%;">
+				<canvas id="systemChart"></canvas>
+			</div>
+		</div>
+
+		<!-- 系统详细信息 -->
+		<div class="card">
+			<h3>系统详细信息</h3>
+			<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+				<div><strong>操作系统：</strong><span id="os">--</span></div>
+				<div><strong>主机名：</strong><span id="hostname">--</span></div>
+				<div><strong>当前时间：</strong><span id="currentTime">--</span></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JavaScript -->
+	<script src="/static/js/system.js"></script>
+	
+	<!-- 版权信息 -->
+	<footer class="footer">
+		<div class="container">
+			<p>归2023级唐家鸿所有未经许可不得复制、更改</p>
+			<p>	E-mail：tlingchenldb@gmail.com</p>
+			<p>	联系电话：19267700810</p>
+		</div>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>个人网盘 - 首页</title>
+	<link rel="stylesheet" href="/static/css/style.css">
+	<script src="/static/js/auth.js?v=1.0"></script>
+</head>
+<body>
+	<!-- 导航栏 -->
+	<nav class="navbar">
+		<div class="container">
+			<h1>个人网盘</h1>
+			<ul class="navbar-nav">
+				<li><a href="/">首页</a></li>
+				<li><a href="/static/disk.html">网盘</a></li>
+				<li class="dropdown">
+					<a href="#">关于</a>
+					<div class="dropdown-content">
+						<a href="/static/about.html">关于网站</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="/static/logs.html">日志管理</a>
+					</div>
+				</li>
+			</ul>
+			<!-- 暗色模式切换按钮 -->
+			<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="切换暗色模式">
+				<span class="theme-icon sun">☀️</span>
+				<span class="theme-icon moon" style="display: none;">🌙</span>
+			</button>
+			
+			<div class="user-profile dropdown" id="userProfile">
+				<!-- 未登录状态 -->
+				<div class="avatar" id="avatar">
+					<span id="userInitial">游</span>
+				</div>
+				<div class="dropdown-content">
+					<div id="loginSection">
+						<a href="#" onclick="showLoginForm()">登录</a>
+					</div>
+					<div id="userSection" style="display: none;">
+						<a href="#" onclick="showUserCenter()">个人中心</a>
+						<a href="/static/system.html">系统状态</a>
+						<a href="#" onclick="logout()">登出</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- 登录表单模态框 -->
+	<div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+		<div class="login-form" style="position: relative;">
+			<span style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 1.5rem;" onclick="closeLoginModal()">&times;</span>
+			<h2>管理员登录</h2>
+			<input type="text" id="username" placeholder="用户名">
+			<input type="password" id="password" placeholder="密码">
+			<button class="btn btn-primary" onclick="login()">登录</button>
+			<div id="loginStatus"></div>
+		</div>
+	</div>
+
+	<!-- 轮播图 -->
+	<div class="carousel" id="carousel">
+		<!-- 上一页按钮 -->
+		<button class="carousel-prev" onclick="prevSlide()">
+			&lt;
+		</button>
+		<!-- 轮播图容器 -->
+		<div class="carousel-container" id="carouselContainer">
+			<!-- 轮播图图片将通过JavaScript动态加载 -->
+		</div>
+		<!-- 下一页按钮 -->
+		<button class="carousel-next" onclick="nextSlide()">
+			&gt;
+		</button>
+		<!-- 轮播图控制按钮 -->
+		<div class="carousel-controls" id="carouselControls">
+			<!-- 轮播图控制按钮将通过JavaScript动态生成 -->
+		</div>
+	</div>
+
+	<!-- 大图预览模态框 -->
+	<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); z-index: 3000; justify-content: center; align-items: center;">
+		<span style="position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 3001;" onclick="closeImageModal()">&times;</span>
+		<img class="modal-content" id="modalImage" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+	</div>
+
+	<!-- 主要内容 -->
+	<div class="container">
+		<div class="card">
+			<h2>欢迎使用个人网盘</h2>
+			<p>这是一个基于Go语言和Gin框架开发的前后端分离个人网盘项目。</p>
+			<p>您可以通过导航栏访问不同的功能页面：</p>
+			<ul>
+				<li><strong>首页</strong> - 展示轮播图和网站介绍</li>
+				<li><strong>网盘</strong> - 管理和访问您的文件</li>
+				<li><strong>关于网站</strong> - 查看网站的详细介绍</li>
+				<li><strong>系统状态</strong> - 查看服务器的系统状态和资源使用率</li>
+			</ul>
+		</div>
+
+		<div class="card">
+			<h3>功能特点</h3>
+			<ul>
+				<li>支持游客和管理员两种用户角色</li>
+				<li>文件上传、下载、预览、重命名、移动和删除</li>
+				<li>目录创建和管理</li>
+				<li>多种文件类型的在线预览</li>
+				<li>系统状态实时监控和历史趋势分析</li>
+				<li>响应式设计，支持多种设备</li>
+			</ul>
+		</div>
+	</div>
+
+	<!-- JavaScript -->
+	<script src="/static/js/carousel.js"></script>
+	
+	<!-- 版权信息 -->
+	<footer class="footer">
+		<div class="container">
+			<p>归2023级唐家鸿所有未经许可不得复制、更改</p>
+			<p>	E-mail：tlingchenldb@gmail.com</p>
+			<p>	联系电话：19267700810</p>
+		</div>
+	</footer>
+</body>
+</html>
